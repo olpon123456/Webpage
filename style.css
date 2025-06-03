@@ -48,6 +48,8 @@ main {
   object-fit: contain;
   margin-top: 5px;
   flex-shrink: 0;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .app-item a {
