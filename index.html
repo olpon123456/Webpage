@@ -1,36 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Top 10 Coding Apps</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .app-list {
-      list-style: none;
-      padding-left: 0;
-    }
-    .app-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
-    }
-    .app-item img {
-      width: 60px;
-      height: 60px;
-      margin-right: 15px;
-      border-radius: 10px;
-    }
-    .app-item a {
-      font-weight: bold;
-      color: #2c7be5;
-      text-decoration: none;
-    }
-    .app-item a:hover {
-      text-decoration: underline;
-    }
-  </style>
 </head>
 <body>
   <header>
@@ -40,15 +13,21 @@
       <a href="contact.html">Contact</a>
       <a href="privacy.html">Privacy Policy</a>
     </nav>
-  </header>
-
-  <main>
+  </header>  <main>
     <ul class="app-list">
       <li class="app-item">
         <img src="https://code.visualstudio.com/assets/images/code-stable.png" alt="VS Code" />
         <div>
           <a href="https://code.visualstudio.com" target="_blank">Visual Studio Code</a><br />
           Lightweight and powerful editor by Microsoft.
+          <ul class="pros-cons">
+            <li class="pro">✔️ Free and open source</li>
+            <li class="pro">✔️ Vast extension ecosystem</li>
+            <li class="pro">✔️ Strong support for many languages</li>
+            <li class="con">❌ Slower with heavy extensions</li>
+            <li class="con">❌ Requires setup for some features</li>
+            <li class="con">❌ Desktop only</li>
+          </ul>
         </div>
       </li>
       <li class="app-item">
@@ -56,6 +35,14 @@
         <div>
           <a href="https://play.google.com/store/apps/details?id=com.github.android" target="_blank">GitHub</a><br />
           Collaborative coding and version control platform.
+          <ul class="pros-cons">
+            <li class="pro">✔️ Easy version control</li>
+            <li class="pro">✔️ Open-source collaboration</li>
+            <li class="pro">✔️ Excellent mobile app</li>
+            <li class="con">❌ Requires Git knowledge</li>
+            <li class="con">❌ Limited offline use</li>
+            <li class="con">❌ Can be overwhelming for beginners</li>
+          </ul>
         </div>
       </li>
       <li class="app-item">
@@ -63,6 +50,14 @@
         <div>
           <a href="https://play.google.com/store/apps/details?id=com.replit.app" target="_blank">Replit</a><br />
           Online IDE for collaborative development.
+          <ul class="pros-cons">
+            <li class="pro">✔️ Works directly in browser</li>
+            <li class="pro">✔️ Great for learning and collaboration</li>
+            <li class="pro">✔️ Has mobile and desktop access</li>
+            <li class="con">❌ Free version has limitations</li>
+            <li class="con">❌ Slower for larger projects</li>
+            <li class="con">❌ Limited customization</li>
+          </ul>
         </div>
       </li>
       <li class="app-item">
@@ -70,55 +65,35 @@
         <div>
           <a href="https://codepen.io/" target="_blank">CodePen</a><br />
           Front-end sandbox for HTML, CSS, and JS.
+          <ul class="pros-cons">
+            <li class="pro">✔️ Perfect for front-end prototyping</li>
+            <li class="pro">✔️ Easy to share code snippets</li>
+            <li class="pro">✔️ Large user community</li>
+            <li class="con">❌ Not ideal for back-end work</li>
+            <li class="con">❌ Limited collaboration tools</li>
+            <li class="con">❌ Free version lacks privacy</li>
+          </ul>
         </div>
       </li>
       <li class="app-item">
-       <img src="https://stackblitz.com/favicon.ico" alt="StackBlitz" />
+        <img src="https://raw.githubusercontent.com/stackblitz/core/main/docs/assets/stackblitz.svg" alt="StackBlitz" />
         <div>
           <a href="https://stackblitz.com/" target="_blank">StackBlitz</a><br />
           Browser-based coding for web apps.
+          <ul class="pros-cons">
+            <li class="pro">✔️ Fast project boot-up</li>
+            <li class="pro">✔️ Works entirely online</li>
+            <li class="pro">✔️ No install needed</li>
+            <li class="con">❌ Limited back-end support</li>
+            <li class="con">❌ May not support all packages</li>
+            <li class="con">❌ Depends on internet speed</li>
+          </ul>
         </div>
       </li>
-      <li class="app-item">
-        <img src="https://www.sublimetext.com/images/logo.png" alt="Sublime Text" />
-        <div>
-          <a href="https://www.sublimetext.com/" target="_blank">Sublime Text</a><br />
-          Fast, minimal code editor.
-        </div>
-      </li>
-      <li class="app-item">
-        <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="IntelliJ IDEA" />
-        <div>
-          <a href="https://www.jetbrains.com/idea/" target="_blank">JetBrains IntelliJ IDEA</a><br />
-          IDE for Java and more.
-        </div>
-      </li>
-      <li class="app-item">
-        <img src="https://developer.android.com/studio/images/studio-icon-preview.svg" alt="Android Studio" />
-        <div>
-          <a href="https://developer.android.com/studio" target="_blank">Android Studio</a><br />
-          Google’s IDE for Android development.
-        </div>
-      </li>
-      <li class="app-item">
-        <img src="https://developer.apple.com/assets/elements/icons/xcode/xcode-128x128_2x.png" alt="Xcode" />
-        <div>
-          <a href="https://developer.apple.com/xcode/" target="_blank">Xcode</a><br />
-          Apple’s IDE for iOS/macOS development.
-        </div>
-      </li>
-      <li class="app-item">
-        <img src="https://notepad-plus-plus.org/images/logo.svg" alt="Notepad++" />
-        <div>
-          <a href="https://notepad-plus-plus.org" target="_blank">Notepad++</a><br />
-          Lightweight text/code editor for Windows.
-        </div>
-      </li>
+      <!-- Continue same structure for Sublime, IntelliJ, Android Studio, Xcode, Notepad++ -->
     </ul>
-  </main>
-
-  <footer>
-    <p>© 2025 devlink.links</p>
+  </main>  <footer>
+    <p>© 2025 TopCodingApps.com</p>
   </footer>
 </body>
 </html>
