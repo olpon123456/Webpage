@@ -2,35 +2,77 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background: #f9f9f9;
 }
 
-header, footer {
-  background-color: #0d1117;
+header {
+  background-color: #222;
   color: white;
   padding: 1em;
   text-align: center;
 }
 
+nav {
+  margin-top: 10px;
+}
+
 nav a {
-  color: #58a6ff;
-  margin: 0 1em;
+  color: #90ee90;
+  margin: 0 10px;
   text-decoration: none;
 }
 
-nav a:hover {
-  text-decoration: underline;
-}
-
 main {
-  padding: 2em;
+  padding: 20px;
 }
 
 .app-list {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
 }
 
-.app-list li {
-  padding: 0.5em 0;
-  border-bottom: 1px solid #ccc;
+.app-item {
+  background: white;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.app-item img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.app-item a {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.pros-cons {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.pro {
+  color: green;
+}
+
+.con {
+  color: red;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #222;
+  color: white;
+  margin-top: 40px;
 }
