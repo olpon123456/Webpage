@@ -4,6 +4,33 @@
   <meta charset="UTF-8" />
   <title>Top 10 Coding Apps</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .app-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .app-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .app-item img {
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+      border-radius: 10px;
+    }
+    .app-item a {
+      font-weight: bold;
+      color: #2c7be5;
+      text-decoration: none;
+    }
+    .app-item a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -17,16 +44,76 @@
 
   <main>
     <ul class="app-list">
-      <li><strong>1. Visual Studio Code</strong> – Lightweight and powerful editor by Microsoft.</li>
-      <li><strong>2. GitHub</strong> – Collaborative coding and version control platform.</li>
-      <li><strong>3. Replit</strong> – Online IDE for collaborative development.</li>
-      <li><strong>4. CodePen</strong> – Front-end sandbox for HTML, CSS, and JS.</li>
-      <li><strong>5. StackBlitz</strong> – Browser-based coding for web apps.</li>
-      <li><strong>6. Sublime Text</strong> – Fast, minimal code editor.</li>
-      <li><strong>7. JetBrains IntelliJ IDEA</strong> – IDE for Java and more.</li>
-      <li><strong>8. Android Studio</strong> – Google’s IDE for Android development.</li>
-      <li><strong>9. Xcode</strong> – Apple’s IDE for iOS/macOS development.</li>
-      <li><strong>10. Notepad++</strong> – Lightweight text/code editor for Windows.</li>
+      <li class="app-item">
+        <img src="https://code.visualstudio.com/assets/images/code-stable.png" alt="VS Code" />
+        <div>
+          <a href="https://play.google.com/store/apps/details?id=com.microsoft.vscode" target="_blank">Visual Studio Code</a><br />
+          Lightweight and powerful editor by Microsoft.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" />
+        <div>
+          <a href="https://play.google.com/store/apps/details?id=com.github.android" target="_blank">GitHub</a><br />
+          Collaborative coding and version control platform.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://replit.com/public/images/logo.svg" alt="Replit" />
+        <div>
+          <a href="https://play.google.com/store/apps/details?id=com.replit.app" target="_blank">Replit</a><br />
+          Online IDE for collaborative development.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://blog.codepen.io/wp-content/uploads/2012/06/Button-Fill-Black-Large.png" alt="CodePen" />
+        <div>
+          <a href="https://codepen.io/" target="_blank">CodePen</a><br />
+          Front-end sandbox for HTML, CSS, and JS.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://stackblitz.com/_astro/logo.5fc3c5c6.svg" alt="StackBlitz" />
+        <div>
+          <a href="https://stackblitz.com/" target="_blank">StackBlitz</a><br />
+          Browser-based coding for web apps.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://www.sublimetext.com/images/logo.png" alt="Sublime Text" />
+        <div>
+          <a href="https://www.sublimetext.com/" target="_blank">Sublime Text</a><br />
+          Fast, minimal code editor.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="IntelliJ IDEA" />
+        <div>
+          <a href="https://www.jetbrains.com/idea/" target="_blank">JetBrains IntelliJ IDEA</a><br />
+          IDE for Java and more.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://developer.android.com/studio/images/studio-icon-preview.svg" alt="Android Studio" />
+        <div>
+          <a href="https://developer.android.com/studio" target="_blank">Android Studio</a><br />
+          Google’s IDE for Android development.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://developer.apple.com/assets/elements/icons/xcode/xcode-128x128_2x.png" alt="Xcode" />
+        <div>
+          <a href="https://developer.apple.com/xcode/" target="_blank">Xcode</a><br />
+          Apple’s IDE for iOS/macOS development.
+        </div>
+      </li>
+      <li class="app-item">
+        <img src="https://notepad-plus-plus.org/images/logo.svg" alt="Notepad++" />
+        <div>
+          <a href="https://play.google.com/store/apps/details?id=com.notepad.plus.plus" target="_blank">Notepad++</a><br />
+          Lightweight text/code editor for Windows.
+        </div>
+      </li>
     </ul>
   </main>
 
