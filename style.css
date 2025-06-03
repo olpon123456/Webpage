@@ -43,9 +43,11 @@ main {
 }
 
 .app-item img {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
+  margin-top: 5px;
+  flex-shrink: 0;
 }
 
 .app-item a {
