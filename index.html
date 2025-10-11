@@ -56,21 +56,27 @@ text-decoration: underline;
   <h3><a href="https://www.blender.org/features/video-editing/" target="_blank">Blender</a></h3>        
   <p>Primarily a 3D modeling tool, but its built-in video editor is capable and great for timeline-based edits with effects.</p>    </div>    </main>    <footer>        
     <p>© Devlinks.link. Curated with care for creators worldwide.</p>        
-  </footer>  <script>      
-window.addEventListener("load", () => {      
-  // Random delay between 2–6 seconds      
-  const min = 2000;      
-  const max = 6000;      
-  const delay = Math.floor(Math.random() * (max - min + 1)) + min;    setTimeout(() => {  
-fetch("https://a1-1-xxxb.onrender.com/get-adcode")  
-.then(response => response.text())  
-.then(code => {  
-// Inject and execute the ad code from your backend  
-const script = document.createElement("script");  
-script.innerHTML = code;  
-document.body.appendChild(script);  
-})  
-.catch(err => console.error("Error loading ad:", err));  
-}, delay);  
-});  
-</script>  </body>  </html>
+  </footer>   <script>
+window.addEventListener("load", () => {
+  // Random delay between 2–6 seconds
+  const min = 2000;
+  const max = 6000;
+  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  setTimeout(() => {
+    fetch("https://a1-1-xxxb.onrender.com/get-adcode")
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to fetch ad");
+        return response.text();
+      })
+      .then((code) => {
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.innerHTML = code;
+        document.body.appendChild(script);
+      })
+      .catch((err) => console.error("Error loading ad:", err));
+  }, delay);
+});
+</script>
+ </body>  </html>
