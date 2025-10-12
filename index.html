@@ -1,86 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Top 10 Video Editing Software + Decoded Ads</title>
-<style>
-body { font-family: system-ui, Arial; padding: 16px; }
-.software-list { max-width: 900px; margin: 0 auto; padding: 1em; }
-.software-item { margin-bottom: 2em; border-bottom: 1px solid #ccc; padding-bottom: 1em; }
-.software-item h3 { margin: 0; }
-.software-item a { color: #007bff; text-decoration: none; }
-.software-item a:hover { text-decoration: underline; }
-#adUrls { margin-top: 2em; background: #f9f9f9; padding: 12px; border-radius: 6px; font-family: monospace; }
-#adUrls li { margin-bottom: 8px; }
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Top 10 Video Editing Software + Decoded Ads</title>
+  <style>
+    body { font-family: system-ui, Arial; padding: 16px; }
+    .software-list { max-width: 900px; margin: 0 auto; padding: 1em; }
+    .software-item { margin-bottom: 2em; border-bottom: 1px solid #ccc; padding-bottom: 1em; }
+    .software-item h3 { margin: 0; }
+    .software-item a { color: #007bff; text-decoration: none; }
+    .software-item a:hover { text-decoration: underline; }
+    h2 { margin-top: 2em; }
+    #adUrls { list-style: disc; margin-left: 20px; padding-left: 0; }
+    iframe { display: none; } /* hidden sandbox */
+  </style>
 </head>
 <body>
-<header>
-<h1>Top 10 Video Editing Software</h1>
-<nav>
-  <a href="index.html">Home</a> |
-  <a href="contact.html">Contact</a> |
-  <a href="privacy.html">Privacy Policy</a>
-</nav>
-</header>
 
-<main class="software-list">
-  <p>Explore the best video editing tools for creators, from beginner-friendly mobile apps to professional studio software:</p>
-  <!-- Existing software items -->
-  <div class="software-item">
-    <h3><a href="https://www.adobe.com/products/premiere.html" target="_blank">Adobe Premiere Pro</a></h3>
-    <p>Industry-leading editor used by professionals...</p>
-  </div>
-  <!-- ... other items ... -->
-</main>
+  <header>
+    <h1>Top 10 Video Editing Software</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="contact.html">Contact</a> |
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
+  </header>
 
-<h2>Decoded Ad URLs</h2>
-<ul id="adUrls"></ul>
+  <main class="software-list">
+    <p>Explore the best video editing tools for creators, from beginner-friendly mobile apps to professional studio software:</p>
+    <div class="software-item"><h3><a href="https://www.adobe.com/products/premiere.html" target="_blank">Adobe Premiere Pro</a></h3></div>
+    <div class="software-item"><h3><a href="https://www.apple.com/final-cut-pro/" target="_blank">Final Cut Pro X</a></h3></div>
+    <div class="software-item"><h3><a href="https://www.capcut.com/" target="_blank">CapCut</a></h3></div>
+    <!-- add remaining software items here -->
+  </main>
 
-<footer>
-<p>© Devlinks.link. Curated with care for creators worldwide.</p>
-</footer>
+  <h2>Decoded Ad URLs</h2>
+  <ul id="adUrls"></ul>
 
-<script>
-window.addEventListener("load", async () => {
-  const adListEl = document.getElementById("adUrls");
-  const LOADER_URL = "https://webpage-76ur.onrender.com/get-adcode"; // your JS loader URL
+  <!-- Hidden sandboxed iframe -->
+  <iframe id="sandbox" sandbox="allow-scripts"></iframe>
 
-  try {
-    const res = await fetch(LOADER_URL);
-    if (!res.ok) throw new Error("Failed to fetch loader: " + res.status);
-    const loaderText = await res.text();
+  <script>
+    const iframe = document.getElementById('sandbox');
+    const adUrlsList = document.getElementById('adUrls');
 
-    // Extract the base64 URLs from the "u=[...]" array
-    const match = loaderText.match(/u=\[([^\]]+)\]/);
-    if (!match) throw new Error("No 'u' array found in loader script");
+    // Build iframe srcdoc with instrumentation for atob
+    const loaderScript = `
+      <script type="text/javascript">
+        (function(){
+          // Override atob to capture decoded URLs
+          const nativeAtob = window.atob;
+          window.atob = function(s){
+            const decoded = nativeAtob.call(this, s);
+            if (/^https?:\\/\\//.test(decoded.trim())){
+              parent.postMessage({decodedAdUrl: decoded.trim()}, '*');
+            }
+            return decoded;
+          };
 
-    const base64Items = match[1].split(",").map(s => s.trim().replace(/^['"]|['"]$/g, ""));
+          // Paste the ad loader script exactly as provided:
+          (function(){var m=window,t="d3c612483a3b9090a942d736517fb715",f=[["siteId",722*785+585+4650020],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],s=["d3d3LmJldHRlcmFkc3lzdGVtLmNvbS9pSUNhbkhhei5taW4uY3Nz","ZDJrazBvM2ZyN2VkMDEuY2xvdWRmcm9udC5uZXQvZC9ybW9qaW8tanMubWluLmpz"],v=-1,n,o,c=function(){clearTimeout(o);v++;if(s[v]&&!(1786174060000<(new Date).getTime()&&1<v)){n=m.document.createElement("script");n.type="text/javascript";n.async=!0;var e=m.document.getElementsByTagName("script")[0];n.src="https://"+atob(s[v]);n.crossOrigin="anonymous";n.onerror=c;n.onload=function(){clearTimeout(o);m[t.slice(0,16)+t.slice(0,16)]||c()};o=setTimeout(c,5E3);e.parentNode.insertBefore(n,e)}};if(!m[t]){try{Object.freeze(m[t]=f)}catch(e){}c()}})();
+        </script>
+    `;
 
-    // Decode and display URLs
-    base64Items.forEach(b64 => {
-      try {
-        const decodedUrl = atob(b64);
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = decodedUrl;
+    iframe.srcdoc = loaderScript;
+
+    // Listen for messages from iframe
+    window.addEventListener('message', ev => {
+      if(ev.data && ev.data.decodedAdUrl){
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = ev.data.decodedAdUrl;
+        a.textContent = ev.data.decodedAdUrl;
         a.target = "_blank";
-        a.textContent = decodedUrl;
         li.appendChild(a);
-        adListEl.appendChild(li);
-      } catch (e) {
-        console.error("Failed to decode:", b64, e);
+        adUrlsList.appendChild(li);
       }
     });
+  </script>
 
-  } catch (err) {
-    const li = document.createElement("li");
-    li.textContent = "Error: " + err.message;
-    li.style.color = "red";
-    adListEl.appendChild(li);
-  }
-});
-</script>
 </body>
 </html>
