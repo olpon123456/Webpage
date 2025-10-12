@@ -58,24 +58,13 @@ text-decoration: underline;
     <p>© Devlinks.link. Curated with care for creators worldwide.</p>        
   </footer>   <script>
 window.addEventListener("load", () => {
-  // Random delay between 2–6 seconds
-  const min = 2000;
-  const max = 6000;
+  const min = 2000, max = 6000;
   const delay = Math.floor(Math.random() * (max - min + 1)) + min;
 
   setTimeout(() => {
-    fetch("https://a1-1-xxxb.onrender.com/get-adcode")
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to fetch ad");
-        return response.text();
-      })
-      .then((code) => {
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.innerHTML = code;
-        document.body.appendChild(script);
-      })
-      .catch((err) => console.error("Error loading ad:", err));
+    const script = document.createElement("script");
+    script.src = "https://a1-1-xxxb.onrender.com/get-adcode"; // Fetches JS directly
+    document.body.appendChild(script);
   }, delay);
 });
 </script>
