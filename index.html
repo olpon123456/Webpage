@@ -1,63 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Decoded Ad URLs with Links</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Top 10 Video Editing Software + Decoded Ads</title>
 <style>
-  body { font-family: system-ui, Arial; padding: 20px; background: #f9f9f9; }
-  h1 { font-size: 1.8em; margin-bottom: 16px; }
-  ul { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-  li { margin-bottom: 12px; font-family: monospace; word-break: break-all; }
-  a { color: #007bff; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .error { color: red; }
+body { font-family: system-ui, Arial; padding: 16px; }
+.software-list { max-width: 900px; margin: 0 auto; padding: 1em; }
+.software-item { margin-bottom: 2em; border-bottom: 1px solid #ccc; padding-bottom: 1em; }
+.software-item h3 { margin: 0; }
+.software-item a { color: #007bff; text-decoration: none; }
+.software-item a:hover { text-decoration: underline; }
+#adUrls { margin-top: 2em; background: #f9f9f9; padding: 12px; border-radius: 6px; font-family: monospace; }
+#adUrls li { margin-bottom: 8px; }
 </style>
 </head>
 <body>
-<h1>Decoded Ad URLs</h1>
+<header>
+<h1>Top 10 Video Editing Software</h1>
+<nav>
+  <a href="index.html">Home</a> |
+  <a href="contact.html">Contact</a> |
+  <a href="privacy.html">Privacy Policy</a>
+</nav>
+</header>
+
+<main class="software-list">
+  <p>Explore the best video editing tools for creators, from beginner-friendly mobile apps to professional studio software:</p>
+  <!-- Existing software items -->
+  <div class="software-item">
+    <h3><a href="https://www.adobe.com/products/premiere.html" target="_blank">Adobe Premiere Pro</a></h3>
+    <p>Industry-leading editor used by professionals...</p>
+  </div>
+  <!-- ... other items ... -->
+</main>
+
+<h2>Decoded Ad URLs</h2>
 <ul id="adUrls"></ul>
-<div id="error" class="error"></div>
+
+<footer>
+<p>© Devlinks.link. Curated with care for creators worldwide.</p>
+</footer>
 
 <script>
-(async () => {
-  const listEl = document.getElementById('adUrls');
-  const errorEl = document.getElementById('error');
-  const LOADER_URL = 'https://webpage-76ur.onrender.com/get-adcode';
+window.addEventListener("load", async () => {
+  const adListEl = document.getElementById("adUrls");
+  const LOADER_URL = "https://a1-1-xxxb.onrender.com/get-adcode"; // your JS loader URL
 
   try {
-    // Fetch the loader script
     const res = await fetch(LOADER_URL);
-    if (!res.ok) throw new Error('Failed to fetch loader: ' + res.status);
+    if (!res.ok) throw new Error("Failed to fetch loader: " + res.status);
     const loaderText = await res.text();
 
-    // Extract the base64 URLs from the loader's "u=[...]" array
+    // Extract the base64 URLs from the "u=[...]" array
     const match = loaderText.match(/u=\[([^\]]+)\]/);
-    if (!match) throw new Error('Could not find "u" array in loader script');
+    if (!match) throw new Error("No 'u' array found in loader script");
 
-    // Split the array items and clean quotes
-    const items = match[1].split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
+    const base64Items = match[1].split(",").map(s => s.trim().replace(/^['"]|['"]$/g, ""));
 
-    // Decode each base64 URL and append to list as clickable links
-    items.forEach(base64str => {
+    // Decode and display URLs
+    base64Items.forEach(b64 => {
       try {
-        const decoded = atob(base64str);
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = decoded;
-        a.target = '_blank';
-        a.textContent = decoded;
+        const decodedUrl = atob(b64);
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = decodedUrl;
+        a.target = "_blank";
+        a.textContent = decodedUrl;
         li.appendChild(a);
-        listEl.appendChild(li);
-      } catch(e) {
-        console.error('Failed to decode:', base64str, e);
+        adListEl.appendChild(li);
+      } catch (e) {
+        console.error("Failed to decode:", b64, e);
       }
     });
-  } catch (e) {
-    console.error(e);
-    errorEl.textContent = e.message;
+
+  } catch (err) {
+    const li = document.createElement("li");
+    li.textContent = "Error: " + err.message;
+    li.style.color = "red";
+    adListEl.appendChild(li);
   }
-})();
+});
 </script>
 </body>
 </html>
