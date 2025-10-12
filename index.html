@@ -5,156 +5,123 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Decoded ad URL</title>
   <style>
-    html,body{height:100%;margin:0;font-family:system-ui,Arial,-apple-system,Segoe UI;display:flex;align-items:center;justify-content:center;background:#111;color:#fff}
-    .center{max-width:900px;padding:24px;text-align:center}
+    html,body{height:100%;margin:0;font-family:system-ui,Arial;display:flex;align-items:center;justify-content:center;background:#111;color:#fff}
+    .box{max-width:900px;padding:24px;text-align:center}
     .url{word-break:break-all;font-size:20px;background:#0b0b0b;padding:18px;border-radius:8px;border:1px solid #222}
     .msg{opacity:.85;margin-top:12px;font-size:14px;color:#ddd}
-    iframe#decoderFrame{display:none !important;width:1px;height:1px;border:0;position:absolute;left:-9999px;top:-9999px}
   </style>
 </head>
 <body>
-  <div id="root" class="center">
-    <div id="loading" class="msg">Decoding ad loader — waiting for decoded ad URL...</div>
+  <div id="root" class="box">
+    <div id="msg" class="msg">Fetching loader and decoding — please wait…</div>
   </div>
 
-  <!-- hidden sandboxed iframe where loader runs and atob() is intercepted -->
-  <iframe id="decoderFrame" sandbox="allow-scripts"></iframe>
-
   <script>
-  (function(){
+  (async function(){
     const LOADER_URL = 'https://webpage-76ur.onrender.com/get-adcode'; // change if needed
-    const TIMEOUT_MS = 10000; // how long to wait for decode before showing error
     const root = document.getElementById('root');
-    const loadingEl = document.getElementById('loading');
-    const iframe = document.getElementById('decoderFrame');
+    const msg = document.getElementById('msg');
 
-    function showOnlyMessage(title, message, sub){
+    function showOnlyMessage(title, text, sub){
       document.title = title || document.title;
       root.innerHTML = '';
-      const box = document.createElement('div');
-      box.style.display = 'flex';
-      box.style.flexDirection = 'column';
-      box.style.alignItems = 'center';
-      box.style.justifyContent = 'center';
+      const el = document.createElement('div');
+      el.style.display = 'flex';
+      el.style.flexDirection = 'column';
+      el.style.alignItems = 'center';
+      el.style.justifyContent = 'center';
       const urlEl = document.createElement('div');
       urlEl.className = 'url';
-      urlEl.textContent = message;
-      box.appendChild(urlEl);
+      urlEl.textContent = text;
+      el.appendChild(urlEl);
       if(sub){
         const subEl = document.createElement('div');
         subEl.className = 'msg';
         subEl.textContent = sub;
-        box.appendChild(subEl);
+        el.appendChild(subEl);
       }
-      root.appendChild(box);
+      root.appendChild(el);
     }
 
-    // Build the iframe HTML as a plain string and return a Blob URL.
-    // The loaderSourceText is inserted verbatim into the iframe HTML (safe because we use a Blob).
-    function makeIframeBlobUrl(loaderSourceText){
-      const iframeHtml = `
-<!doctype html>
-<html>
-  <head><meta charset="utf-8"><title>decoder-frame</title></head>
-  <body>
-    <script>
-      (function(){
-        // intercept atob and forward decoded values to parent
-        const nativeAtob = window.atob;
-        window.atob = function(s){
-          const decoded = nativeAtob.call(this, s);
-          try{ parent.postMessage({type:'atob-decoded', decoded: decoded}, '*'); }catch(e){}
-          return decoded;
-        };
-        // forward console.log to parent (optional)
-        (function(){
-          const nativeLog = console.log.bind(console);
-          console.log = function(){
-            try{ parent.postMessage({type:'console', args: Array.from(arguments)}, '*'); }catch(e){}
-            nativeLog.apply(console, arguments);
-          };
-        })();
+    try{
+      msg.textContent = 'Fetching loader...';
+      const r = await fetch(LOADER_URL, {mode:'cors'});
+      if(!r.ok) throw new Error('fetch failed: ' + r.status);
+      const code = await r.text();
 
-        // run the loader code:
-        try{
-          ${loaderSourceText}
-        }catch(e){
-          try{ parent.postMessage({type:'loader-error', message: String(e)}, '*'); }catch(err){}
+      // Try to find the s = [ "base64", "..." ] array (or any base64-like literals)
+      // 1) Look for s = [ ... ] pattern first
+      let found = [];
+      const sArrayMatch = code.match(/s\s*=\s*\[([^\]]+)\]/m);
+      if(sArrayMatch && sArrayMatch[1]){
+        // extract quoted items inside the brackets
+        const items = sArrayMatch[1].match(/(['"])(.*?)\1/g);
+        if(items){
+          for(const it of items){
+            // remove surrounding quotes
+            found.push(it.slice(1,-1));
+          }
         }
-      })();
-    </script>
-  </body>
-</html>
-`;
-      const blob = new Blob([iframeHtml], { type: 'text/html' });
-      return URL.createObjectURL(blob);
-    }
+      }
 
-    async function start(){
-      loadingEl.textContent = 'Fetching loader...';
-      let codeText = null;
-      try{
-        const res = await fetch(LOADER_URL, {mode:'cors'});
-        if(!res.ok) throw new Error('fetch failed: ' + res.status);
-        codeText = await res.text();
-      }catch(err){
-        showOnlyMessage('Decode error', 'Failed to fetch loader', String(err));
+      // 2) fallback: find any atob('base64...') occurrences
+      if(found.length === 0){
+        const atobMatches = Array.from(code.matchAll(/atob\(\s*(['"])(.*?)\1\s*\)/g));
+        for(const m of atobMatches) found.push(m[2]);
+      }
+
+      // 3) fallback: find any long base64-like literals in quotes
+      if(found.length === 0){
+        const literalMatches = Array.from(code.matchAll(/(['"])([A-Za-z0-9+/=]{40,})\1/g));
+        for(const m of literalMatches) found.push(m[2]);
+      }
+
+      if(found.length === 0){
+        showOnlyMessage('No base64 found', 'Could not locate base64 strings in loader.', 'The loader format might differ — paste it or inspect manually.');
         return;
       }
 
-      // Create a blob URL for the iframe that includes the loader code.
-      // Using a blob avoids the need to escape </script> sequences.
-      let blobUrl;
-      try{
-        blobUrl = makeIframeBlobUrl(codeText);
-      }catch(e){
-        showOnlyMessage('Internal error', 'Failed to prepare iframe', String(e));
-        return;
-      }
-
-      // Point the hidden iframe to the blob URL
-      iframe.src = blobUrl;
-      loadingEl.textContent = 'Loader loaded in sandbox — waiting for atob decode...';
-
-      // Prepare timeout
-      const t = setTimeout(()=>{
-        window.removeEventListener('message', onMessage);
-        showOnlyMessage('No decoded URL', 'No URL decoded within timeout (' + (TIMEOUT_MS/1000) + 's).', 'Check loader, CORS or network.');
-        try{ URL.revokeObjectURL(blobUrl); }catch(e){}
-      }, TIMEOUT_MS);
-
-      // Message handler
-      function onMessage(ev){
+      // decode and pick first https URL
+      let decodedUrl = null;
+      for(const b64 of found){
         try{
-          const d = ev.data || {};
-          if(d && d.type === 'atob-decoded'){
-            const decoded = String(d.decoded || '').trim();
-            if(!decoded) return;
-            if(/^https?:\/\/./i.test(decoded)){
-              clearTimeout(t);
-              window.removeEventListener('message', onMessage);
-              try{ URL.revokeObjectURL(blobUrl); }catch(e){}
-              showOnlyMessage('Decoded ad URL', decoded, 'Decoded from loader atob()');
-            } else {
-              // Show non-URL decoded content but keep waiting for an https URL until timeout
-              showOnlyMessage('Decoded (non-URL)', decoded, 'Waiting for an https:// decode until timeout');
-            }
-          } else if(d && d.type === 'loader-error'){
-            clearTimeout(t);
-            window.removeEventListener('message', onMessage);
-            try{ URL.revokeObjectURL(blobUrl); }catch(e){}
-            showOnlyMessage('Loader error', d.message || 'Unknown loader error');
+          const dec = atob(b64);
+          // if it's a url, use it
+          if(/^https?:\/\//i.test(dec.trim())){
+            decodedUrl = dec.trim();
+            break;
           }
         }catch(e){
-          // ignore
+          // ignore invalid base64
         }
       }
 
-      window.addEventListener('message', onMessage);
-    }
+      // If no https URL found, show first decoded string as fallback
+      if(!decodedUrl){
+        for(const b64 of found){
+          try{
+            const dec = atob(b64);
+            if(dec && dec.trim().length>0){
+              decodedUrl = dec.trim();
+              break;
+            }
+          }catch(e){}
+        }
+      }
 
-    // start immediately
-    start();
+      if(decodedUrl){
+        showOnlyMessage('Decoded ad URL', decodedUrl, 'Decoded locally (no loader executed)');
+      } else {
+        showOnlyMessage('Decoded — nothing looked like a URL', 'Found base64 strings but none decoded to an http(s) URL.', 'You can inspect the base64 list in console.');
+        console.log('Base64 candidates found:', found);
+        for(const b of found){
+          try{ console.log('decoded:', atob(b)); }catch(e){ console.log('failed decode', e, b); }
+        }
+      }
+
+    }catch(err){
+      showOnlyMessage('Error', 'Failed to fetch or decode loader', String(err));
+    }
   })();
   </script>
 </body>
