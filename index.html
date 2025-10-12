@@ -9,7 +9,6 @@
     .center{max-width:900px;padding:24px;text-align:center}
     .url{word-break:break-all;font-size:20px;background:#0b0b0b;padding:18px;border-radius:8px;border:1px solid #222}
     .msg{opacity:.85;margin-top:12px;font-size:14px;color:#ddd}
-    /* Hidden iframe used for decoding */
     iframe#decoderFrame{display:none !important;width:1px;height:1px;border:0;position:absolute;left:-9999px;top:-9999px}
   </style>
 </head>
@@ -29,7 +28,6 @@
     const loadingEl = document.getElementById('loading');
     const iframe = document.getElementById('decoderFrame');
 
-    // Utility to replace page content with a single message (decoded URL or error)
     function showOnlyMessage(title, message, sub){
       document.title = title || document.title;
       root.innerHTML = '';
@@ -51,37 +49,35 @@
       root.appendChild(box);
     }
 
-    // Build iframe srcdoc that intercepts atob and posts decoded strings to parent
-    function buildSrcdoc(loaderSourceEscaped){
-      return `
+    // Build the iframe HTML as a plain string and return a Blob URL.
+    // The loaderSourceText is inserted verbatim into the iframe HTML (safe because we use a Blob).
+    function makeIframeBlobUrl(loaderSourceText){
+      const iframeHtml = `
 <!doctype html>
 <html>
   <head><meta charset="utf-8"><title>decoder-frame</title></head>
   <body>
     <script>
       (function(){
-        // small safe logger
-        function innerLog(m){ try{ /* no-op visual logs inside hidden iframe */ }catch(e){} }
-
-        // intercept atob: post decoded strings to parent
+        // intercept atob and forward decoded values to parent
         const nativeAtob = window.atob;
         window.atob = function(s){
           const decoded = nativeAtob.call(this, s);
           try{ parent.postMessage({type:'atob-decoded', decoded: decoded}, '*'); }catch(e){}
-          innerLog('[atob] ' + decoded);
           return decoded;
         };
+        // forward console.log to parent (optional)
+        (function(){
+          const nativeLog = console.log.bind(console);
+          console.log = function(){
+            try{ parent.postMessage({type:'console', args: Array.from(arguments)}, '*'); }catch(e){}
+            nativeLog.apply(console, arguments);
+          };
+        })();
 
-        // forward console messages back to parent (optional)
-        const rawLog = console.log;
-        console.log = function(){
-          try{ parent.postMessage({type:'console', args: Array.from(arguments)}, '*'); }catch(e){}
-          rawLog.apply(console, arguments);
-        };
-
-        // Run the loader code we injected from parent:
+        // run the loader code:
         try{
-          ${loaderSourceEscaped}
+          ${loaderSourceText}
         }catch(e){
           try{ parent.postMessage({type:'loader-error', message: String(e)}, '*'); }catch(err){}
         }
@@ -90,10 +86,11 @@
   </body>
 </html>
 `;
+      const blob = new Blob([iframeHtml], { type: 'text/html' });
+      return URL.createObjectURL(blob);
     }
 
-    // Start decode process immediately
-    (async function start(){
+    async function start(){
       loadingEl.textContent = 'Fetching loader...';
       let codeText = null;
       try{
@@ -105,53 +102,59 @@
         return;
       }
 
-      // Prepare loader source for embedding safely into srcdoc
-      // Escape backticks and </script> sequences
-      const escaped = codeText.replace(/`/g,'\\`').replace(/<\\/script>/gi,'<\\\\/script>');
-      iframe.srcdoc = buildSrcdoc(escaped);
+      // Create a blob URL for the iframe that includes the loader code.
+      // Using a blob avoids the need to escape </script> sequences.
+      let blobUrl;
+      try{
+        blobUrl = makeIframeBlobUrl(codeText);
+      }catch(e){
+        showOnlyMessage('Internal error', 'Failed to prepare iframe', String(e));
+        return;
+      }
+
+      // Point the hidden iframe to the blob URL
+      iframe.src = blobUrl;
       loadingEl.textContent = 'Loader loaded in sandbox — waiting for atob decode...';
 
-      // Set timeout in case nothing decodes
+      // Prepare timeout
       const t = setTimeout(()=>{
-        showOnlyMessage('No decoded URL', 'No URL decoded within timeout (' + (TIMEOUT_MS/1000) + 's).', 'Check loader or CORS.');
+        window.removeEventListener('message', onMessage);
+        showOnlyMessage('No decoded URL', 'No URL decoded within timeout (' + (TIMEOUT_MS/1000) + 's).', 'Check loader, CORS or network.');
+        try{ URL.revokeObjectURL(blobUrl); }catch(e){}
       }, TIMEOUT_MS);
 
-      // Listen for decoded messages from iframe
+      // Message handler
       function onMessage(ev){
         try{
           const d = ev.data || {};
           if(d && d.type === 'atob-decoded'){
-            // First choose the decoded value that looks like a URL
             const decoded = String(d.decoded || '').trim();
-            if(!decoded){
-              // ignore empty, keep waiting
-              return;
-            }
-
-            // prefer first https? URL; otherwise use the first decoded content
-            if(/^https?:\\/\\//i.test(decoded)){
+            if(!decoded) return;
+            if(/^https?:\/\/./i.test(decoded)){
               clearTimeout(t);
               window.removeEventListener('message', onMessage);
+              try{ URL.revokeObjectURL(blobUrl); }catch(e){}
               showOnlyMessage('Decoded ad URL', decoded, 'Decoded from loader atob()');
             } else {
-              // if not a URL, we may still show it (fallback)
-              // but continue listening for potential URL decodes
-              // show temporarily but continue waiting for a URL until timeout
-              showOnlyMessage('Decoded (non-URL)', decoded, 'No URL yet — waiting for https:// decode until timeout');
+              // Show non-URL decoded content but keep waiting for an https URL until timeout
+              showOnlyMessage('Decoded (non-URL)', decoded, 'Waiting for an https:// decode until timeout');
             }
           } else if(d && d.type === 'loader-error'){
             clearTimeout(t);
             window.removeEventListener('message', onMessage);
+            try{ URL.revokeObjectURL(blobUrl); }catch(e){}
             showOnlyMessage('Loader error', d.message || 'Unknown loader error');
-          } else if(d && d.type === 'console'){
-            // ignore console forwards
           }
         }catch(e){
-          // ignore parsing issues
+          // ignore
         }
       }
+
       window.addEventListener('message', onMessage);
-    })();
+    }
+
+    // start immediately
+    start();
   })();
   </script>
 </body>
