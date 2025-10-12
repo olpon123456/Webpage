@@ -11,12 +11,6 @@ const WEBSITE_ID = process.env.WEBSITE_ID;
 app.use(express.static("public"));
 
 // CORS for safety
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  next();
-});
-
-// --- Backend route that fetches ad code ---
 app.get("/get-adcode", async (req, res) => {
   try {
     const response = await fetch(
@@ -29,15 +23,11 @@ app.get("/get-adcode", async (req, res) => {
       return res.status(500).send("Error fetching PopAds code");
     }
 
-    let adcode = await response.text();
+    const adcode = await response.text();
 
-    adcode = adcode
-      .replace(/<\/?script[^>]*>/gi, "")
-      .replace(/\/\*[\s\S]*?\*\//g, "")
-      .replace(/<!\[CDATA\[|\]\]>/g, "")
-      .trim();
-
-    res.json({ adcode });
+    // Return raw JS code, not JSON
+    res.setHeader("Content-Type", "application/javascript");
+    res.send(adcode);
   } catch (error) {
     console.error("Error fetching adcode:", error);
     res.status(500).send("Error retrieving adcode");
