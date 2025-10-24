@@ -241,6 +241,14 @@ l.parentNode.insertBefore(s, l);
       skipButtonClickCaption: 'Skip Ad ▶'
     }
   });
+
+player.on('adId', function() {
+    const vid = document.getElementById('hilltopad-video');
+    if (vid && vid.paused) {
+      vid.play().catch(()=>{}); // retry silently
+    }
+  });
+
 </script>
 
 
