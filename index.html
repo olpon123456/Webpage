@@ -3,23 +3,11 @@
   <meta charset="UTF-8" />  
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
 
-<link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css">
-  <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
-
 
 
   <title>Top 10 Video Editing Software</title>  
   <link rel="stylesheet" href="style.css" />  
   <style>  
-
-
-.hilltopad-video {
-      width: 320px;
-      height: 180px;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    }
 
     .software-list {  
       max-width: 900px;  
@@ -99,10 +87,6 @@ l.parentNode.insertBefore(s, l);
 </script>
 
 
-
-</head>  
-<body>  
-
 <script>
 (function(usx){
 var d = document,
@@ -116,7 +100,11 @@ l.parentNode.insertBefore(s, l);
 })({})
 </script>
 
-<video id="hilltopad-video" autoplay muted playsinline></video>
+
+
+
+</head>  
+<body>  
 
 
   <header>  
@@ -217,40 +205,6 @@ l.parentNode.insertBefore(s, l);
   </main>    <footer>  
     <p>© Devlinks.link. Curated with care for creators worldwide.</p>  
   </footer> 
-
-<script>
-  var player = fluidPlayer('hilltopad-video', {
-    layoutControls: {
-      autoPlay: true,
-      mute: true,
-      fillToContainer: true,
-      allowDownload: false,
-      playPauseAnimation: false,
-      controlBar: {
-        autoHide: true,
-        autoHideTimeout: 3,
-        animated: false
-      },
-      layout: 'default'
-    },
-    vastOptions: {
-      adList: [{
-        roll: 'preRoll',
-        vastTag: 'https://droopyteacher.com/d/mNFtz.dyGUN/v/ZEGnUd/SexmH9WukZfUqlwkMP1TRYW2XOIDiQJ5sO/DvMbtONJjgY/4-NsDzkY4LNVAB'
-      }],
-      skipButtonCaption: 'Skip Ad',
-      skipButtonClickCaption: 'Skip Ad ▶'
-    }
-  });
-
-player.on('adId', function() {
-    const vid = document.getElementById('hilltopad-video');
-    if (vid && vid.paused) {
-      vid.play().catch(()=>{}); // retry silently
-    }
-  });
-
-</script>
 
 
  </body>  
